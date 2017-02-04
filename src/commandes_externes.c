@@ -71,8 +71,6 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
     if (pid_fils != -1) { // le fork s'est bien passé
 
       if (pid_fils == 0) { // code du fils
-        printf("code du fils\n");
-
         /** 
          * TODO : Dans le cas de plusieurs arguments 'pstree -p 838' par exemple,
          * il faut passer les arguments de la forme "pstree", "-p", "838"
@@ -81,14 +79,31 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
          */ 
 
         /** 
-         * TODO : Processus en arrière plan à chaque fois ?
-         * Exemple de gedit : on revient au shell, une fois que gedit est fermé
+         * TODO : résoudre le pb du wait
+         *
+         * Avec un wait
+         * Exemple de gedit : on revient au shell uniquement une fois que gedit 
+         * est fermé
+         *
+         * Mais sans wait(), il y a d'autres pb
+         * Exemple de pstree : on ne revient jamais au shell sans intervention de l'utilisateur
          */
-
         execlp(info->ligne_cmd[debut], info->ligne_cmd[debut], NULL);
+
+        /** 
+         * Si la commande n'a pas pu s'exécutée, et uniquement dans ce cas 
+         * (car on ne revient jamais d'un exec() - d'où le fork() )
+         * Par exemple : 
+         * - erreur du execlp() (mais pas de la commande exécutée)
+         */
         printf("Commande non exécutée\n");
       } else { // code du père
         printf("code du père\n");
+        /** 
+         * Le père attend le fils
+         * Cela n'est pas utile dans tous les cas,
+         * et pose des problèmes
+         */ 
         wait(&pid_fils);
       }
     } else { // le fork a échoué

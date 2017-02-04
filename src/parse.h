@@ -2,8 +2,12 @@
 #define _PARSE_H_
 
 #include "divers.h"
-
-typedef enum{AUTRE=0, /* le =0 est important, ainsi un appel a bzero rend toute la structure egale a AUTRE */
+/**
+ * Les valeurs possibles d'un modificateur, c'est à dire du segment de la ligne de commande contenant une instruction. 
+ * Cette instruction doit commencer ou être entièrement constituée d'un symbole particulier, 
+ * défini dans la fonction parse (fichier parse.c)
+ **/
+typedef enum{AUTRE=0, // le =0 est important, ainsi un appel a bzero rend toute la structure egale a AUTRE 
 	REDIRECTION_ENTREE,
 	REDIRECTION_SORTIE_AJOUT,
 	REDIRECTION_SORTIE,

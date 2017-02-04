@@ -64,6 +64,38 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
      */
     strcat(ligne, info->ligne_cmd[debut+i]);
   }
+  
+    // On crée un second processus pour ne pas quitter notre shell 
+    pid_t pid_fils = fork();
+
+    if (pid_fils != -1) { // le fork s'est bien passé
+
+      if (pid_fils == 0) { // code du fils
+        printf("code du fils\n");
+
+        /** 
+         * TODO : Dans le cas de plusieurs arguments 'pstree -p 838' par exemple,
+         * il faut passer les arguments de la forme "pstree", "-p", "838"
+         * Fonction équivalente pour passer ligne en arg ?
+         * execlp(info->ligne_cmd[debut],ligne, NULL);
+         */ 
+
+        /** 
+         * TODO : Processus en arrière plan à chaque fois ?
+         * Exemple de gedit : on revient au shell, une fois que gedit est fermé
+         */
+
+        execlp(info->ligne_cmd[debut], info->ligne_cmd[debut], NULL);
+        printf("pas ok\n");
+      } else { // code du père
+        printf("code du père\n");
+        wait(&pid_fils);
+      }
+    } else { // le fork a échoué
+      return 0;
+    }
+
+
 
   /**
    * \ici permet de savoir si la commande doit être exécuter en premier-plan ou en arrière-plan

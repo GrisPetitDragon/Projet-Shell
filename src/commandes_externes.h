@@ -16,6 +16,9 @@
 #define _COMMANDES_EXTERNES_H_
 #include "divers.h" // inclusion du fichier divers.h (header)
 #include "parse.h"  // inclusion du fichier parse.h (header)
+#include <sys/types.h>
+#include <sys/wait.h>
+
 
 /**
  * \def fonction t_bool ActionEXEC (parse_info *info, int debut, int nbArg)

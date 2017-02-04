@@ -147,11 +147,27 @@ void AfficheInvite() {
  */
 t_bool ecrire_variable (char* nomVar, char* valeur) {
 
-  printf("Appel a ecrire_variable (%s %d) a ecrire avec \"%s\" et \"%s\". \n",
+	/**
+	 * int setenv(const char *name, const char *value, int overwrite)
+	 * Change ou ajoute une variable d'environnement
+	 */
+
+	int success = setenv(nomVar, valeur, 1);
+
+    if (success == 0) {
+  		printf("La variable \"%s\" vaut maintenant \"%s\".", nomVar, valeur);
+  		return vrai;
+  	} else {
+  		printf("La variable n'a pas pu être modifiée/créée.");
+  		return faux;
+  	}
+
+	printf("Appel a ecrire_variable (%s %d) a ecrire avec \"%s\" et \"%s\". \n",
 	 __FILE__,
 	 __LINE__,
 	 nomVar,
 	 valeur);
+
   return faux;
 }
 
@@ -164,11 +180,19 @@ t_bool ecrire_variable (char* nomVar, char* valeur) {
 t_bool lire_variable (char* nomVar, char* valeur, int taille) {
   strcpy(valeur, "");
 
+  /**
+   * char *getenv(const char *name)
+   * Lit la valeur de la variable d'environnement name
+   */
+  valeur = getenv(nomVar);
+
   printf("Appel a lire_variable (%s %d) a ecrire avec \"%s\", \"%s\" et %d. \n",
 	 __FILE__,
 	 __LINE__,
 	 nomVar,
 	 valeur,
 	 taille);
+
+  printf("%s : %s\n", nomVar, valeur);
   return faux;
 }

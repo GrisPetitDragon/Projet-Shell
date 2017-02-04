@@ -86,7 +86,7 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
          */
 
         execlp(info->ligne_cmd[debut], info->ligne_cmd[debut], NULL);
-        printf("pas ok\n");
+        printf("Commande non exécutée\n");
       } else { // code du père
         printf("code du père\n");
         wait(&pid_fils);

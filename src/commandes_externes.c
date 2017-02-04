@@ -76,6 +76,7 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
          * il faut passer les arguments de la forme "pstree", "-p", "838"
          * Fonction équivalente pour passer ligne en arg ?
          * execlp(info->ligne_cmd[debut],ligne, NULL);
+         * Ici on ne gère que les 5 premiers arguments : 1 commande + 4 arguments
          */ 
 
         /** 
@@ -88,7 +89,33 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
          * Mais sans wait(), il y a d'autres pb
          * Exemple de pstree : on ne revient jamais au shell sans intervention de l'utilisateur
          */
-        execlp(info->ligne_cmd[debut], info->ligne_cmd[debut], NULL);
+
+        // on gère les commandes jusqu'à 5 arguments (commande inclue)
+        switch(nbArg) {
+          case 1:
+            execlp(info->ligne_cmd[debut], info->ligne_cmd[0], NULL);
+            break;
+          case 2 :
+            execlp(info->ligne_cmd[debut], info->ligne_cmd[0], info->ligne_cmd[1], NULL);
+            break;
+          case 3:
+            execlp(info->ligne_cmd[debut], info->ligne_cmd[0], info->ligne_cmd[1], info->ligne_cmd[2], NULL);
+            break;
+          case 4:
+            execlp(info->ligne_cmd[debut], info->ligne_cmd[0], info->ligne_cmd[1], info->ligne_cmd[2], info->ligne_cmd[3], NULL);
+            break;
+          default:
+            // on prend en compte les 5 premiers arguments (commande inclue)
+            execlp(info->ligne_cmd[debut], info->ligne_cmd[0], info->ligne_cmd[1], info->ligne_cmd[2], info->ligne_cmd[3], info->ligne_cmd[4], NULL);
+            break;
+        }
+
+        if (nbArg == 1 ) {
+          execlp(info->ligne_cmd[debut], info->ligne_cmd[0], NULL);
+        } else if (nbArg == 3 ) {
+          execlp(info->ligne_cmd[debut], info->ligne_cmd[0], info->ligne_cmd[1], info->ligne_cmd[2], NULL);
+        }
+        
 
         /** 
          * Si la commande n'a pas pu s'exécutée, et uniquement dans ce cas 
@@ -98,7 +125,6 @@ t_bool  ActionEXEC (parse_info *info, int debut, int nbArg) {
          */
         printf("Commande non exécutée\n");
       } else { // code du père
-        printf("code du père\n");
         /** 
          * Le père attend le fils
          * Cela n'est pas utile dans tous les cas,
